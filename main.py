@@ -1,7 +1,7 @@
 
 count=0
 
-with open("trending_today.in") as f:
+with open("me_at_the_zoo.in") as f:
     lines = f.readlines()
     lines = [x.strip() for x in lines]
 
@@ -124,6 +124,7 @@ for video, Serverlatencies in videoLatenciesCache.items():
             if not videosStorage.has_key(server):
                 videosStorage[server] = list()
 
+            cacheServerSpaceLeft[int(server)] -= videos[int(video)]
             videosStorage[server].append(str(video))
             break
 
