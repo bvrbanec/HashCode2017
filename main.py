@@ -1,7 +1,7 @@
 
 count=0
 
-with open("kittens.in") as f:
+with open("me_at_the_zoo.in") as f:
     lines = f.readlines()
     lines = [x.strip() for x in lines]
 
@@ -124,7 +124,7 @@ for video, Serverlatencies in videoLatenciesCache.items():
             if not videosStorage.has_key(server):
                 videosStorage[server] = list()
 
-            videosStorage[server].append(video)
+            videosStorage[server].append(str(video))
             break
 
 #print videosStorage
@@ -135,4 +135,4 @@ print len(videosStorage.keys())
 
 #
 for server, videos in videosStorage.items():
-    print server + ' ' + ' '.join(videos)
+    print str(server) + ' ' + ' '.join(videos)
