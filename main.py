@@ -1,7 +1,7 @@
 
 count=0
 
-with open("me_at_the_zoo.in") as f:
+with open("trending_today.in") as f:
     lines = f.readlines()
     lines = [x.strip() for x in lines]
 
