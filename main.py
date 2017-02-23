@@ -1,17 +1,82 @@
-numberOfVideos=5
-numberOfendpoints= 2
-requestDesc= 4
-caches= 3
-cacheCapacity= 100
 
-videos= [50,50,80,30,110]
-endpointsLatencyDataCentar = {'0':1000,'1':500}
-endpointsCacheLatency=[{'0':100,'2':200,'1':300},{}]
+count=0
 
-requests= {'0':{'3':1500,'4':500, '1':1000},
-          '1':{'0':1000, '1': 300}}
+with open("kittens.in") as f:
+    lines = f.readlines()
+    lines = [x.strip() for x in lines]
+
+    #first line
+    mySystem = lines[0].split(' ')
+    numberOfVideos = mySystem[0]
+
+    numberOfEndpoints = mySystem[1]
+
+    endpointsCacheLatency = [dict() for x in range(int(numberOfEndpoints))]
+
+    requestDesc = mySystem[2]
+
+    caches = int(mySystem[3])
+    cacheCapacity = int(mySystem[4])
+
+    #video sizes
+    videos = lines[1].split(' ')
+    videos = map(int, videos)
+
+    #reading endpoints with their characteristics
+    more = True
+    currentIndexInLines = 2
+    endpointCounter = 0
+    endpointsLatencyDataCentar ={}
+
+    while more :
+        #take endpoint with datacenter and number of caches connected
+        currentEndpoint = lines[currentIndexInLines]
+        currentIndexInLines += 1
+        currentEndpoint = currentEndpoint.split(' ')
+
+        #DataCenterlatency
+        endpointsLatencyDataCentar[endpointCounter] = currentEndpoint[0]
+        numberOfCashesForEndpoint = currentEndpoint[1]
+
+        # print "endpoint has caches: ", numberOfCashesForEndpoint
+
+        for x in range(1,int(numberOfCashesForEndpoint)+1):
+            cacheLatency=lines[currentIndexInLines]
+            cacheLatency = cacheLatency.split(' ')
+            # print cacheLatency
+            cache = cacheLatency[0]
+            latency= cacheLatency[1]
+            # print endpointCounter," ", cache, " ", latency
+
+            endpointsCacheLatency[endpointCounter][cache]=latency
+            currentIndexInLines +=1
+
+        endpointCounter +=1
+        if int(endpointCounter)==int(numberOfEndpoints):
+            more = False
+            break;
+
+    # print "final line of endpoints", currentIndexInLines
+    #process requests
+    requests = [dict() for x in range(int(numberOfEndpoints))]
+    for x in range(1, int(requestDesc) + 1):
+        request = lines[currentIndexInLines]
+        request = request.split(' ')
+        videoNum = int(request[0])
+        endpointNum= int(request[1])
+        requestsNum = int(request[2])
+        # print videoNum, "", endpointNum, "", requestsNum
+        # print request
+        requests[endpointNum][videoNum] = requestsNum
+        currentIndexInLines+=1
+
+    requestHelp = {}
+    for index in range(len(requests)):
+        requestHelp[str(index)]=requests[index]
+    requests=requestHelp
 
 #videorequests = {'0': 1000, '1': 1300, '2': 0, '3' : 1500, '4': 500}
+
 
 videorequests = {}
 
@@ -39,7 +104,7 @@ for k, v in sorted_x:
 
         for endpoint, endpoitnRequest in requests.items():
             if endpoitnRequest.has_key(k) and endpointsCacheLatency[int(endpoint)].has_key(str(server)):
-                result += endpoitnRequest[k] * endpointsCacheLatency[int(endpoint)][str(server)]
+                result += endpoitnRequest[k] * int(endpointsCacheLatency[int(endpoint)][str(server)])
 
         if result == 0:
             result = float('inf')
