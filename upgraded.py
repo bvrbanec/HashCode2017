@@ -112,7 +112,8 @@ while True:
 
             for endpoint, endpoitnRequest in requests.items():
                 if endpoitnRequest.has_key(k) and endpointsCacheLatency[int(endpoint)].has_key(str(server)):
-                    result += endpoitnRequest[k] * int(endpointsCacheLatency[int(endpoint)][str(server)])
+                    result += endpoitnRequest[k] * (int(endpointsCacheLatency[int(endpoint)][str(server)]) -
+                    int(endpointsLatencyDataCentar[int(endpoint)]))
 
             if result == 0:
                 result = MAX
